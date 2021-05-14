@@ -1,0 +1,22 @@
+{
+  "name": "silent-apply",
+  "version": "1.0.4",
+  "description": "测试对方法进行异常捕获",
+  "main": "dist/NJLog.umd.min.js",
+  "scripts": {
+    "doc:dev": "umi-lib doc dev",
+    "doc:build": "umi-lib doc build",
+    "build": "umi-lib build --file NJTLog ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "silent-apply"
+  ],
+  "author": "pingjun@eastmoney.com",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "umi-library": "^1.6.0"
+  }
+}
