@@ -105,7 +105,10 @@ var NJ_TIME_TRACKER = '_NJ_TIME_TRACKER';
 var DEFAULT_KEY = '_DEFAULT_KEY';
 var DEFAULT_KEY_OBJ = {
   running: false,
-  duration: 0
+  duration: 0,
+  frequency: 0,
+  startUnix: 0,
+  endUnix: 0
 };
 
 var Log = /*#__PURE__*/function () {
@@ -123,6 +126,11 @@ var Log = /*#__PURE__*/function () {
   }
 
   _createClass(Log, [{
+    key: "getAllKey",
+    value: function getAllKey() {
+      return this.tracker && Object.keys(this.tracker);
+    }
+  }, {
     key: "haveKey",
     value: function haveKey(key) {
       return !!this.tracker[key];
@@ -157,11 +165,11 @@ var Log = /*#__PURE__*/function () {
 
         var log = this.getLog(key);
 
-        if (log.running) {
-          return;
+        if (!log.running) {
+          log.running = true;
+          log.frequency += 1;
+          log.startUnix = new Date().getTime();
         }
-
-        log['startUnix'] = new Date().getTime();
       }
     }
   }, {
@@ -203,8 +211,9 @@ var Log = /*#__PURE__*/function () {
 
       return console;
     }(function () {
-      var keys = Array.prototype.slice.call(arguments);
-      if (!keys.length) keys = [DEFAULT_KEY];
+      var keys = Array.prototype.slice.call(arguments); // if (!keys.length) keys = [DEFAULT_KEY]
+
+      if (!keys.length) keys = this.getAllKey();
 
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
@@ -215,7 +224,7 @@ var Log = /*#__PURE__*/function () {
         }
 
         var log = this.getLog(key);
-        console.log("".concat(key, ": ").concat(log.duration, "ms"));
+        console.log("".concat(key, ": ").concat(log.duration, "ms ").concat(log.frequency, "\u6B21"));
       }
     })
   }, {
