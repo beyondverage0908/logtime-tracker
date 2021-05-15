@@ -1,9 +1,10 @@
 var Log = require('../dist/NJTLog')
+var User = require('./user')
 
 function logic1() {
 	Log.start('f1')
-	Log.start('f1')
-	Log.start('f1')
+	const user = new User('xiaoli')
+	user.setAge(18)
 	Log.end('f1')
 }
 
