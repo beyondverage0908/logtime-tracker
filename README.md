@@ -48,7 +48,7 @@ function main() {
 
 # 三. NJTLog统计方式
 
-NJTLog对这一分析过程进行了抽象，无需在逻辑代码中定义时间的统计逻辑，只需要声明式标记统计到某个label上。如下，我们可以将之前的统计逻辑修改如下
+NJTLog对这一分析过程进行了抽象，无需在逻辑代码中定义时间的统计逻辑，只需要声明式标记统计到某个label上。如下，我们可以将之前的统计逻辑修改如下。
 
 ```javascript
 import Log from 'nj-perf-log'
@@ -76,9 +76,60 @@ function main() {
   Log.console()
 }
 ```
-# 四. NJTLog Api
+# 四. 如何使用
 
-1. **start([...label])**
+在前端工程化的项目中直接使用npm安装依赖
+
+```shell
+npm install nj-perf-log
+or
+yarn add nj-perf-log
+```
+1. ESModule下使用
+```javascript
+import PerfLog from 'nj-perf-log'
+// 启用
+PerfLog.enable(true)
+PerfLog.start('label')
+/**
+ * 逻辑部分
+**/
+PerfLog.end('label')
+// 输出分析结果
+PerfLog.stat('label')
+```
+2. CommonJS下使用
+```javascript
+var PerfLog = require('nj-perf-log')
+// 启用
+PerfLog.enable(true)
+PerfLog.start('label')
+/**
+ * 逻辑部分
+**/
+PerfLog.end('label')
+// 输出分析结果
+PerfLog.stat('label'')
+```
+# 
+3. 非工程化项目
+
+在非工程化的项目，可以在[此处]([https://github.com/beyondverage0908/logtime-tracker/releases](https://github.com/beyondverage0908/logtime-tracker/releases?fileGuid=wTyChGHQyCWq3DJw))下载最新版本的js，并在在项目的head中引用。改js会暴露一个PerfLog对象，改对象的使用方式如上。
+
+# 五. NJTLog Api
+
+1. enable(flag: Boolean)
+
+是否启用，默认不启用。该方法的启用与否需要在统计代码之前被调用
+
+```javascript
+import Log from 'nj-perf-log'
+// 启用
+Log.enable(true)
+// 禁用
+Log.enable(false)
+```
+2. **start([...label])**
 
 开始一个统计，label用于当前统计的名字。label是一个可选入参，不传递默认记录到'_DEFAULT_KEY'上。也可以传递多个参数，一次性开始多个计时。
 
@@ -90,7 +141,8 @@ Log.start('label1')
 // 同时开始多个label的计时器
 Log.start('label1', 'label2', 'label3')
 ```
-2. end([...label])
+## 
+3. end([...label])
 
 暂停当前阶段的一个统计，组件内部会保留当前label统计的数据。label是一个可选参数，不传递默认暂停'_DEFAULT_KEY'的统计。也可以传递多个参数，一次性暂停多个计时。
 
@@ -102,19 +154,21 @@ Log.end('label1')
 // 暂停等多个label计时器
 Log.end('label1', 'label2', 'label3')
 ```
-3. stat([...label])
+## 
+4. stat([...label])
 
 控制台输出对应的日志，包括时间，单位毫秒，执行次数。label是个可选参数，不传则输出所有label统计。
 
 ```javascript
 // 输出所有label计时器
-Log.console()
+Log.stat()
 // 输出指定label的计时器
-Log.console('label1')
+Log.stat('label1')
 // 一次输出多个label的计时器
-Log.console('label1', 'label2', 'label3')
+Log.stat('label1', 'label2', 'label3')
 ```
-4. clear([...label])
+## 
+5. clear([...label])
 
 清空统计，清空指定label的统计。label是可选参数，不传则默认清空'_DEFAULT_KEY'的日志
 
@@ -125,15 +179,4 @@ Log.clear()
 Log.clear('label1')
 // 清空指定label的计时器
 Log.clear('label1', 'label2', 'label3')
-```
-5. enable(flag: Boolean)
-
-是否启用，默认不启用。该方法的启用与否需要在统计代码之前被调用
-
-```javascript
-import Log from 'nj-perf-log'
-// 启用
-Log.enable(true)
-// 禁用
-Log.enable(false)
 ```

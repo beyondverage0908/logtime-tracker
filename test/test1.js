@@ -28,6 +28,6 @@ module.exports = {
 			// logic3()
 		}
 		Log.end('sum')
-		Log.console()
+		Log.stat()
 	}
 }

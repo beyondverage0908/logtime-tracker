@@ -1,3 +1,5 @@
+import { version } from '../package.json'
+
 function getGlobal() {
 	let gbl = undefined
 	if (typeof exports === 'object' && typeof module !== 'undefined') {
@@ -34,9 +36,9 @@ class Log {
 			}
 			global[NJ_TIME_TRACKER_ENABLE_KEY] = NJ_TIME_TRACKER_ENABLE;
 		}
-		this.global = global
 		this.isEnable = global[NJ_TIME_TRACKER_ENABLE_KEY]
 		this.tracker = global[NJ_TIME_TRACKER]
+		this.version = version || '1.0.0'
 	}
 	getAllKey() {
 		return this.tracker && Object.keys(this.tracker)
@@ -57,8 +59,9 @@ class Log {
 		if (flag === undefined) {
 			console.info('---调用enable方法没有入参，默认不启动日志统计')
 		}
-		this.global[NJ_TIME_TRACKER_ENABLE_KEY] = !!flag
-		this.isEnable = this.global[NJ_TIME_TRACKER_ENABLE_KEY]
+		let global = getGlobal()
+		global[NJ_TIME_TRACKER_ENABLE_KEY] = !!flag
+		this.isEnable = global[NJ_TIME_TRACKER_ENABLE_KEY]
 	}
 	start() {
 		if (!this.isEnable) return;
@@ -101,7 +104,7 @@ class Log {
 			// this.setLog(key, log)
 		}
 	}
-	console() {
+	stat() {
 		if (!this.isEnable) return;
 		let keys = [...arguments]
 		// if (!keys.length) keys = [DEFAULT_KEY]

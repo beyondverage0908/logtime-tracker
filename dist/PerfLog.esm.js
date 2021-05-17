@@ -85,6 +85,8 @@ function _objectSpread2(target) {
   return target;
 }
 
+var version = "1.0.1";
+
 function getGlobal() {
   var gbl = undefined;
 
@@ -124,9 +126,9 @@ var Log = /*#__PURE__*/function () {
       global[NJ_TIME_TRACKER_ENABLE_KEY] = NJ_TIME_TRACKER_ENABLE;
     }
 
-    this.global = global;
     this.isEnable = global[NJ_TIME_TRACKER_ENABLE_KEY];
     this.tracker = global[NJ_TIME_TRACKER];
+    this.version = version;
   }
 
   _createClass(Log, [{
@@ -161,8 +163,9 @@ var Log = /*#__PURE__*/function () {
         console.info('---调用enable方法没有入参，默认不启动日志统计');
       }
 
-      this.global[NJ_TIME_TRACKER_ENABLE_KEY] = !!flag;
-      this.isEnable = this.global[NJ_TIME_TRACKER_ENABLE_KEY];
+      var global = getGlobal();
+      global[NJ_TIME_TRACKER_ENABLE_KEY] = !!flag;
+      this.isEnable = global[NJ_TIME_TRACKER_ENABLE_KEY];
     }
   }, {
     key: "start",
@@ -220,18 +223,8 @@ var Log = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "console",
-    value: function (_console) {
-      function console() {
-        return _console.apply(this, arguments);
-      }
-
-      console.toString = function () {
-        return _console.toString();
-      };
-
-      return console;
-    }(function () {
+    key: "stat",
+    value: function stat() {
       if (!this.isEnable) return;
       var keys = Array.prototype.slice.call(arguments); // if (!keys.length) keys = [DEFAULT_KEY]
 
@@ -261,7 +254,7 @@ var Log = /*#__PURE__*/function () {
       } else {
         console.log(tableConsoleData);
       }
-    })
+    }
   }, {
     key: "clear",
     value: function clear() {
