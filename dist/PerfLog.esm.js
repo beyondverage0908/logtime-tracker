@@ -85,7 +85,7 @@ function _objectSpread2(target) {
   return target;
 }
 
-var version = "1.0.1";
+var version = "1.0.2";
 
 function getGlobal() {
   var gbl = undefined;
