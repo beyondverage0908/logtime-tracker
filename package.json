@@ -1,8 +1,8 @@
 {
-  "name": "silent-apply",
-  "version": "1.0.4",
-  "description": "测试对方法进行异常捕获",
-  "main": "dist/NJLog.umd.min.js",
+  "name": "perf-log",
+  "version": "1.0.0",
+  "description": "时间打点工具",
+  "main": "dist/PerfLog.umd.min.js",
   "scripts": {
     "doc:dev": "umi-lib doc dev",
     "doc:build": "umi-lib doc build",
@@ -10,7 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "silent-apply"
+	"Time Log",
+	"Log",
+    "PerfLog"
   ],
   "author": "pingjun@eastmoney.com",
   "license": "ISC",
