@@ -6,7 +6,7 @@
   "scripts": {
     "doc:dev": "umi-lib doc dev",
     "doc:build": "umi-lib doc build",
-    "build": "umi-lib build --file NJTLog ./src/index.js",
+    "build": "umi-lib build --file PerfLog ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

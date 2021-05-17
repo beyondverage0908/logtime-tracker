@@ -102,6 +102,8 @@ function getGlobal() {
 
 
 var NJ_TIME_TRACKER = '_NJ_TIME_TRACKER';
+var NJ_TIME_TRACKER_ENABLE_KEY = '_NJ_TIME_TRACKER_ENABLE';
+var NJ_TIME_TRACKER_ENABLE = false;
 var DEFAULT_KEY = '_DEFAULT_KEY';
 var DEFAULT_KEY_OBJ = {
   running: false,
@@ -119,9 +121,11 @@ var Log = /*#__PURE__*/function () {
 
     if (!global[NJ_TIME_TRACKER]) {
       global[NJ_TIME_TRACKER] = _defineProperty({}, DEFAULT_KEY, _objectSpread2({}, DEFAULT_KEY_OBJ));
+      global[NJ_TIME_TRACKER_ENABLE_KEY] = NJ_TIME_TRACKER_ENABLE;
     }
 
     this.global = global;
+    this.isEnable = global[NJ_TIME_TRACKER_ENABLE_KEY];
     this.tracker = global[NJ_TIME_TRACKER];
   }
 
@@ -151,8 +155,19 @@ var Log = /*#__PURE__*/function () {
       return this.tracker[key];
     }
   }, {
+    key: "enable",
+    value: function enable(flag) {
+      if (flag === undefined) {
+        console.info('---调用enable方法没有入参，默认不启动日志统计');
+      }
+
+      this.global[NJ_TIME_TRACKER_ENABLE_KEY] = !!flag;
+      this.isEnable = this.global[NJ_TIME_TRACKER_ENABLE_KEY];
+    }
+  }, {
     key: "start",
     value: function start() {
+      if (!this.isEnable) return;
       var keys = Array.prototype.slice.call(arguments);
       if (!keys.length) keys = [DEFAULT_KEY];
 
@@ -175,6 +190,7 @@ var Log = /*#__PURE__*/function () {
   }, {
     key: "end",
     value: function end() {
+      if (!this.isEnable) return;
       var keys = Array.prototype.slice.call(arguments);
       if (!keys.length) keys = [DEFAULT_KEY];
 
@@ -183,19 +199,24 @@ var Log = /*#__PURE__*/function () {
 
         if (!this.haveKey(key)) {
           console.log("---\u6CA1\u6709\u542F\u52A8\u7EDF\u8BA1key: ".concat(key, " "));
-          return;
+          continue;
         }
 
         var log = this.getLog(key);
+
+        if (!log.running) {
+          console.log("---\u6CA1\u6709\u542F\u52A8\u7EDF\u8BA1key: ".concat(key, " "));
+          continue;
+        }
+
         log.running = false;
         log.endUnix = new Date().getTime();
         var gapUnix = log.endUnix - log.startUnix;
 
         if (gapUnix) {
           log.duration = log.duration + gapUnix;
-        }
+        } // this.setLog(key, log)
 
-        this.setLog(key, log);
       }
     }
   }, {
@@ -211,20 +232,34 @@ var Log = /*#__PURE__*/function () {
 
       return console;
     }(function () {
+      if (!this.isEnable) return;
       var keys = Array.prototype.slice.call(arguments); // if (!keys.length) keys = [DEFAULT_KEY]
 
       if (!keys.length) keys = this.getAllKey();
+      var tableConsoleData = [];
 
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
 
         if (!this.haveKey(key)) {
           console.log("--->\u6CA1\u6709\u542F\u52A8\u7EDF\u8BA1key: ".concat(key, " "));
-          return;
+          continue;
         }
 
-        var log = this.getLog(key);
-        console.log("".concat(key, ": ").concat(log.duration, "ms ").concat(log.frequency, "\u6B21"));
+        var log = this.getLog(key); // console.log(`${key}: ${log.duration}ms ${log.frequency}次`)
+
+        var tdata = {
+          label: key,
+          'duration(ms)': log.duration,
+          'frequency(次)': log.frequency
+        };
+        tableConsoleData.push(tdata);
+      }
+
+      if (console.table && typeof console.table === 'function') {
+        console.table(tableConsoleData);
+      } else {
+        console.log(tableConsoleData);
       }
     })
   }, {
@@ -232,14 +267,15 @@ var Log = /*#__PURE__*/function () {
     value: function clear() {
       var _this = this;
 
+      if (!this.isEnable) return;
       var keys = Array.prototype.slice.call(arguments);
       if (!keys.length) keys = [DEFAULT_KEY];
       keys.forEach(function (key) {
-        if (_this.haveKey(key)) {
+        if (!_this.haveKey(key)) {
           return;
         }
 
-        _this.setLog(key, DEFAULT_KEY_OBJ);
+        _this.setLog(key, _objectSpread2({}, DEFAULT_KEY_OBJ));
       });
     }
   }]);
