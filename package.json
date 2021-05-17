@@ -1,6 +1,6 @@
 {
-  "name": "perf-log",
-  "version": "1.0.0",
+  "name": "nj-perf-log",
+  "version": "1.0.1",
   "description": "时间打点工具",
   "main": "dist/PerfLog.umd.min.js",
   "scripts": {
